@@ -67,8 +67,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR pCmdLi
 	int argc = 0;
 	printf("%s\n", pCmdLine);
 	
-	// wchar_t** argv = (wchar_t **) CommandLineToArgvW(pCmdLine, &argc);
-
 	for (int i = 0; i < __argc; i++) {
 		printf("argv[%d] %s\n", i, __argv[i]);
 	}
@@ -109,13 +107,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR pCmdLi
 			break;
 		}
 	}
-	// if (__argc == 4) {
-	// }
-	// else if (__argc == 3) {
-	// 	// dllPath = __argv[1];
-	// }
-	// else if (__argc == 2) {
-	// }
 
 	if (pid == 0) {
 		printf("Process not found\n");
@@ -147,6 +138,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR pCmdLi
 
 	std::ifstream fStream(dllPath, std::ios::binary | std::ios::ate);
 
+	std::string dllPathStr(dllPath);
+	std::string dllName = dllPathStr.substr(dllPathStr.find_last_of("/\\") + 1);
+	
+	printf("Gotten dllName %s\n", dllName.c_str());
 
 	if (fStream.fail()) {
 		printf("Opening the file failed: %X\n", (DWORD) fStream.rdstate());
@@ -178,8 +173,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR pCmdLi
 	FARPROC fOffset = 0;
 
 	if (funcName) {
-		printf("dllPath %s\n", dllPath);
-		HMODULE hModule = LoadLibraryA(dllPath);
+		printf("dllPath %s\n", dllName.c_str());
+		HMODULE hModule = LoadLibraryA(dllName.c_str());
 		printf("funcName %s\n", funcName);
 		printf("hModule %x \n", hModule);
 
@@ -192,8 +187,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR pCmdLi
 			return EXIT_FAILURE;
 		}
 
-		fOffset = (FARPROC) ((long long) GetProcAddress(hModule, funcName) - (long long) hModule);
-		printf("fOffset %x getprocaddr %x", fOffset, GetProcAddress(hModule, funcName));
+		fOffset = (FARPROC) (GetProcAddress(hModule, funcName));
+
+		#ifdef _WIN64
+		fOffset = (FARPROC) ((long long) fOffset - (long long) hModule);
+		#else
+		fOffset = (FARPROC) ((long) fOffset - (long) hModule);
+		#endif
+		printf("foOffset %x proc %x\n", fOffset);
 		FreeLibrary(hModule);
 	}
 
