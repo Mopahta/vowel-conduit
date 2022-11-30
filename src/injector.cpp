@@ -302,10 +302,16 @@ void __stdcall Shellcode(MANUAL_MAPPING_DATA* pData) {
 	}
 
 	if (pData->fOffset) {
+ 		#ifdef _WIN64
 		((FARPROC) ((long long) pData->fOffset + (long long) pBase))();
+		#else 
+		((FARPROC) ((long) pData->fOffset + (long) pBase))();
+		#endif
 	}
 	else {
 		auto _DllMain = reinterpret_cast<f_DLL_ENTRY_POINT>(pBase + pOpt->AddressOfEntryPoint);
 		_DllMain(pBase, DLL_PROCESS_ATTACH, 0);
 	}
+
+	pData->hMod = (HINSTANCE) 0x13371337;
 }
