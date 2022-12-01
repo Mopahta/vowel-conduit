@@ -1,3 +1,6 @@
+#ifndef _INJECTOR
+#define _INJECTOR
+
 #include <Windows.h>
 #include <iostream>
 #include <fstream>
@@ -26,3 +29,5 @@ bool ManualMapDll(HANDLE hProc, BYTE* pSrcData, SIZE_T FileSize, FARPROC fOffset
 				  bool ClearHeader = true, bool ClearNonNeededSections = true, 
 				  bool AdjustProtections = true);
 void __stdcall Shellcode(MANUAL_MAPPING_DATA* pData);
+
+#endif

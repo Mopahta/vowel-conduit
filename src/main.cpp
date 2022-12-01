@@ -1,12 +1,5 @@
 #include "injector.h"
 
-
-#include <stdio.h>
-#include <string>
-#include <iostream>
-
-using namespace std;
-
 bool IsCorrectTargetArchitecture(HANDLE hProc) {
 	BOOL bTarget = FALSE;
 	if (!IsWow64Process(hProc, &bTarget)) {
