@@ -9,5 +9,10 @@ g++ -o injector.exe src/*.h src/*.cpp
 ## Usage
 
 ```
-injector.exe dll_path [process-name [dll_function_name]]
+injector.exe dll_path [process_name [dll_function_name]]
 ```
+*dll_path* - path to your dll
+
+*process_name* [optional] - process name
+
+*dll_function_name* [optional] - dll entry point function name accepting ***no parameters***, which name is *not mangled* after compilation. Instead, DllMain will be called.
