@@ -58,16 +58,10 @@ void enableDebugPrivilege() {
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR pCmdLine, int nCmdShow) {
 
 	int argc = 0;
-	printf("%s\n", pCmdLine);
 	
-	for (int i = 0; i < __argc; i++) {
-		printf("argv[%d] %s\n", i, __argv[i]);
-	}
-
 	char* dllPath = new char[MAX_PATH];
 	char* funcName = nullptr;
 	DWORD pid;
-	printf("%d\n", __argc);
 	if (__argc <= 1) {
 		printf("Invalid Params\n");
 		printf("Usage: dll_path [process_name [dllFuncName]]\n");
